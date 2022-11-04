@@ -24,22 +24,22 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1>Next Chat</h1>
+        <h1>sign in</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Input
-            label="Email"
+            label="email"
             id="email"
             type="email"
-            placeholder="exmaple@mail.com"
+            placeholder="example@mail.com"
             register={register("email", { required: true })}
           />
           <Input
-            label="Password"
+            label="password"
             id="password"
             type="password"
             register={register("password", { required: true })}
           />
-          <button>Sign in</button>
+          <button>sign in</button>
         </form>
       </main>
     </>

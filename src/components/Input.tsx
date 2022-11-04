@@ -3,7 +3,7 @@ import { UseFormRegisterReturn } from "react-hook-form";
 interface IProps {
   label: string;
   id: string;
-  type: string;
+  type?: string;
   placeholder?: string;
   register: UseFormRegisterReturn;
 }
