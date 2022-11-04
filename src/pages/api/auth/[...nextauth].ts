@@ -2,8 +2,8 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verify } from "argon2";
 
-import prisma from "../../../lib/prismadb";
-import { signInSchema } from "../../../lib/validation/auth";
+import prisma from "@/lib/prismadb";
+import { signInSchema } from "@/lib/validation/auth";
 
 export default NextAuth({
   session: {

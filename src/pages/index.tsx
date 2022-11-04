@@ -3,9 +3,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn, signOut } from "next-auth/react";
 
-import { signInSchema, ISignIn } from "../lib/validation/auth";
+import { signInSchema, ISignIn } from "@/lib/validation/auth";
 
-import Input from "../components/Input";
+import Input from "@/components/Input";
 
 export default function Home() {
   const { register, handleSubmit } = useForm<ISignIn>({

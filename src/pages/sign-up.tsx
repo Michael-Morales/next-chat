@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { signUpSchema, ISignUp } from "../lib/validation/auth";
 
-import Input from "../components/Input";
+import Input from "@/components/Input";
 
 const ERRORS: {
   [key: string]: {
