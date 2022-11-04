@@ -1,6 +1,20 @@
 import Head from "next/head";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { signInSchema, ISignIn } from "../lib/validation/auth";
+
+import Input from "../components/Input";
 
 export default function Home() {
+  const { register, handleSubmit } = useForm<ISignIn>({
+    resolver: zodResolver(signInSchema),
+  });
+
+  const onSubmit: SubmitHandler<ISignIn> = (val) => {
+    console.log(val);
+  };
+
   return (
     <>
       <Head>
@@ -11,6 +25,22 @@ export default function Home() {
 
       <main>
         <h1>Next Chat</h1>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            label="Email"
+            id="email"
+            type="email"
+            placeholder="exmaple@mail.com"
+            register={register("email", { required: true })}
+          />
+          <Input
+            label="Password"
+            id="password"
+            type="password"
+            register={register("password", { required: true })}
+          />
+          <button>Sign in</button>
+        </form>
       </main>
     </>
   );
