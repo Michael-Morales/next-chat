@@ -8,11 +8,25 @@ import Input from "../components/Input";
 
 export default function SignUp() {
   const router = useRouter();
-  const { register, handleSubmit } = useForm<ISignUp>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<ISignUp>({
     resolver: zodResolver(signUpSchema),
   });
 
   const onSubmit: SubmitHandler<ISignUp> = async (values) => {
+    if (values.password !== values.confirmPassword) {
+      setError("password", {
+        type: "no_match",
+        message: "Passwords don't match",
+      });
+
+      return;
+    }
+
     const res = await fetch("/api/auth/sign-up", {
       method: "POST",
       headers: {
@@ -33,7 +47,7 @@ export default function SignUp() {
         <Input
           label="username"
           id="username"
-          register={register("username", { required: true })}
+          register={register("username", { required: true, minLength: 3 })}
         />
         <Input
           label="email"
