@@ -15,11 +15,37 @@ export default async function handler(
         req.body
       );
 
-      if (password !== confirmPassword) throw Error("Passwords don't match.");
+      let user = await prisma.user.findUnique({
+        where: { email },
+        select: {
+          id: true,
+          email: true,
+          password: true,
+        },
+      });
+
+      if (user) {
+        throw new Error("email_already_exists");
+      }
+
+      user = await prisma.user.findUnique({
+        where: { username },
+        select: {
+          id: true,
+          email: true,
+          password: true,
+        },
+      });
+
+      if (user) {
+        throw new Error("username_already_exists");
+      }
+
+      if (password !== confirmPassword) throw new Error("no_match");
 
       const hashedPassword = await hash(password);
 
-      const user = await prisma.user.create({
+      user = await prisma.user.create({
         data: {
           username,
           email,
@@ -27,7 +53,8 @@ export default async function handler(
         },
         select: {
           id: true,
-          username: true,
+          email: true,
+          password: true,
         },
       });
 
@@ -36,7 +63,6 @@ export default async function handler(
         user,
       });
     } catch (err: any) {
-      console.error(err);
       return res.status(500).json({ statusCode: 500, message: err.message });
     }
   } else {

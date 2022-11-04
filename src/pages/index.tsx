@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn, signOut } from "next-auth/react";
 
 import { signInSchema, ISignIn } from "../lib/validation/auth";
 
@@ -11,8 +12,14 @@ export default function Home() {
     resolver: zodResolver(signInSchema),
   });
 
-  const onSubmit: SubmitHandler<ISignIn> = (val) => {
-    console.log(val);
+  const onSubmit: SubmitHandler<ISignIn> = (values) => {
+    const { email, password } = signInSchema.parse(values);
+
+    signIn("app-login", {
+      callbackUrl: "/sign-up",
+      email,
+      password,
+    });
   };
 
   return (
@@ -41,6 +48,7 @@ export default function Home() {
           />
           <button>sign in</button>
         </form>
+        <button onClick={() => signOut()}>sign out</button>
       </main>
     </>
   );

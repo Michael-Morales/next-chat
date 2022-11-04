@@ -6,6 +6,26 @@ import { signUpSchema, ISignUp } from "../lib/validation/auth";
 
 import Input from "../components/Input";
 
+const ERRORS: {
+  [key: string]: {
+    name: "password" | "email" | "username" | "confirmPassword";
+    message: string;
+  };
+} = {
+  no_match: {
+    name: "password",
+    message: "Passwords don't match",
+  },
+  email_already_exists: {
+    name: "email",
+    message: "Email address already exists",
+  },
+  username_already_exists: {
+    name: "username",
+    message: "Username already exists",
+  },
+};
+
 export default function SignUp() {
   const router = useRouter();
   const {
@@ -18,26 +38,37 @@ export default function SignUp() {
   });
 
   const onSubmit: SubmitHandler<ISignUp> = async (values) => {
-    if (values.password !== values.confirmPassword) {
-      setError("password", {
-        type: "no_match",
-        message: "Passwords don't match",
+    try {
+      if (values.password !== values.confirmPassword) {
+        setError("password", {
+          type: "no_match",
+          message: "Passwords don't match",
+        });
+
+        return;
+      }
+
+      const res = await fetch("/api/auth/sign-up", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
       });
 
-      return;
+      const data = await res.json();
+
+      if (!data.user) {
+        throw new Error(data.message);
+      }
+
+      router.push("/");
+    } catch (err: any) {
+      setError(ERRORS[err.message].name, {
+        type: err.message,
+        message: ERRORS[err.message].message,
+      });
     }
-
-    const res = await fetch("/api/auth/sign-up", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
-
-    const data = await res.json();
-
-    console.log(data);
   };
 
   return (
