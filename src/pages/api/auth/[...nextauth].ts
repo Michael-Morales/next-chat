@@ -38,7 +38,7 @@ export default NextAuth({
           return null;
         }
 
-        let result = await prisma.user.findUnique({
+        const result = await prisma.user.findUnique({
           where: {
             email,
           },

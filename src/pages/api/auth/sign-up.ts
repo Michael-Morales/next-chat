@@ -15,6 +15,10 @@ export default async function handler(
         req.body
       );
 
+      if (!username || !email || !password || !password) {
+        throw new Error("empty_field");
+      }
+
       let user = await prisma.user.findUnique({
         where: { email },
         select: {

@@ -8,7 +8,11 @@ import { signInSchema, ISignIn } from "@/lib/validation/auth";
 import Input from "@/components/Input";
 
 export default function Home() {
-  const { register, handleSubmit } = useForm<ISignIn>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ISignIn>({
     resolver: zodResolver(signInSchema),
   });
 
@@ -16,7 +20,7 @@ export default function Home() {
     const { email, password } = signInSchema.parse(values);
 
     signIn("app-login", {
-      callbackUrl: "/sign-up",
+      callbackUrl: "/chat",
       email,
       password,
     });
