@@ -1,7 +1,8 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 import { signInSchema, ISignIn } from "@/lib/validation/auth";
 
@@ -34,25 +35,42 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <h1>sign in</h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Input
-            label="email"
-            id="email"
-            type="email"
-            placeholder="example@mail.com"
-            register={register("email", { required: true })}
-          />
-          <Input
-            label="password"
-            id="password"
-            type="password"
-            register={register("password", { required: true })}
-          />
-          <button>sign in</button>
-        </form>
-        <button onClick={() => signOut()}>sign out</button>
+      <main className="flex min-h-screen items-center justify-center">
+        <div className="w-full max-w-sm rounded-lg bg-zinc-50 p-6 shadow-md">
+          <h1 className="mb-6 text-2xl font-bold capitalize">sign in</h1>
+          <form
+            className="mb-1 flex flex-col gap-y-4"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <Input
+              label="email"
+              id="email"
+              type="email"
+              placeholder="example@mail.com"
+              register={register("email", { required: true })}
+            />
+            <Input
+              label="password"
+              id="password"
+              type="password"
+              register={register("password", { required: true })}
+            />
+            <button className="rounded bg-sky-400 p-2 font-bold capitalize text-zinc-50">
+              sign in
+            </button>
+          </form>
+          <p>
+            <span className="mr-1 text-sm text-zinc-500">
+              Don&apos;t have an account?
+            </span>
+            <Link
+              href="/sign-up"
+              className="text-sm text-sky-500 transition-colors hover:text-sky-300"
+            >
+              Sign up
+            </Link>
+          </p>
+        </div>
       </main>
     </>
   );

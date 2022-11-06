@@ -16,9 +16,20 @@ export default function Input({
   register,
 }: IProps) {
   return (
-    <div>
-      <label htmlFor={id}>{label}</label>
-      <input id={id} type={type} placeholder={placeholder} {...register} />
+    <div className="flex flex-col gap-y-1">
+      <label
+        className="text-sm font-semibold capitalize text-zinc-500"
+        htmlFor={id}
+      >
+        {label}
+      </label>
+      <input
+        className="rounded border-zinc-500 bg-transparent placeholder:text-zinc-400"
+        id={id}
+        type={type}
+        placeholder={placeholder}
+        {...register}
+      />
     </div>
   );
 }

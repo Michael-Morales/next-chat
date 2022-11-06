@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -72,38 +73,57 @@ export default function SignUp() {
   };
 
   return (
-    <main>
-      <h1>sign up</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          label="username"
-          id="username"
-          register={register("username", { required: true, minLength: 3 })}
-        />
-        <Input
-          label="email"
-          id="email"
-          type="email"
-          placeholder="example@mail.com"
-          register={register("email", { required: true })}
-        />
-        <Input
-          label="password"
-          id="password"
-          type="password"
-          register={register("password", { required: true, minLength: 6 })}
-        />
-        <Input
-          label="confirm password"
-          id="confirmPassword"
-          type="password"
-          register={register("confirmPassword", {
-            required: true,
-            minLength: 6,
-          })}
-        />
-        <button>sign up</button>
-      </form>
+    <main className="flex min-h-screen items-center justify-center">
+      <div className="w-full max-w-sm rounded-lg bg-zinc-50 p-6 shadow-md">
+        <h1 className="mb-6 text-2xl font-bold capitalize">sign up</h1>
+        <form
+          className="mb-1 flex flex-col gap-y-4"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <Input
+            label="username"
+            id="username"
+            placeholder="JohnDoe"
+            register={register("username", { required: true, minLength: 3 })}
+          />
+          <Input
+            label="email"
+            id="email"
+            type="email"
+            placeholder="example@mail.com"
+            register={register("email", { required: true })}
+          />
+          <Input
+            label="password"
+            id="password"
+            type="password"
+            register={register("password", { required: true, minLength: 6 })}
+          />
+          <Input
+            label="confirm password"
+            id="confirmPassword"
+            type="password"
+            register={register("confirmPassword", {
+              required: true,
+              minLength: 6,
+            })}
+          />
+          <button className="rounded bg-sky-400 p-2 font-bold capitalize text-zinc-50">
+            sign up
+          </button>
+        </form>
+        <p>
+          <span className="mr-1 text-sm text-zinc-500">
+            Already have an account?
+          </span>
+          <Link
+            href="/"
+            className="text-sm text-sky-500 transition-colors hover:text-sky-300"
+          >
+            Sign in
+          </Link>
+        </p>
+      </div>
     </main>
   );
 }
