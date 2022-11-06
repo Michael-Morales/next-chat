@@ -6,27 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, ISignUp } from "../lib/validation/auth";
 
 import Input from "@/components/Input";
-import { useEffect } from "react";
-
-// const ERRORS: {
-//   [key: string]: {
-//     name: "password" | "email" | "username" | "confirmPassword";
-//     message: string;
-//   };
-// } = {
-//   no_match: {
-//     name: "password",
-//     message: "Passwords don't match",
-//   },
-//   email_already_exists: {
-//     name: "email",
-//     message: "Email address already exists",
-//   },
-//   username_already_exists: {
-//     name: "username",
-//     message: "Username already exists",
-//   },
-// };
 
 export default function SignUp() {
   const router = useRouter();
@@ -34,41 +13,25 @@ export default function SignUp() {
     register,
     handleSubmit,
     formState: { errors },
-    setError,
   } = useForm<ISignUp>({
     resolver: zodResolver(signUpSchema),
   });
 
   const onSubmit: SubmitHandler<ISignUp> = async (values) => {
-    try {
-      const parsedValues = await signUpSchema.parseAsync(values);
+    const parsedValues = await signUpSchema.parseAsync(values);
 
-      const res = await fetch("/api/auth/sign-up", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(parsedValues),
-      });
+    const res = await fetch("/api/auth/sign-up", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(parsedValues),
+    });
 
-      const data = await res.json();
+    await res.json();
 
-      if (!data.user) {
-        throw new Error(data.message);
-      }
-
-      router.push("/");
-    } catch (err: any) {
-      // setError(ERRORS[err.message].name, {
-      //   type: err.message,
-      //   message: ERRORS[err.message].message,
-      // });
-    }
+    router.push("/");
   };
-
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
 
   return (
     <main className="flex min-h-screen items-center justify-center">
@@ -110,7 +73,7 @@ export default function SignUp() {
             })}
             error={errors.confirmPassword?.message}
           />
-          <button className="rounded bg-sky-400 p-2 font-bold capitalize text-zinc-50">
+          <button className="rounded bg-sky-400 p-2 font-bold capitalize text-zinc-50 transition-colors hover:bg-sky-300 focus-visible:bg-sky-300">
             sign up
           </button>
         </form>

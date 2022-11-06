@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { hash } from "argon2";
 
 import prisma from "@/lib/prismadb";
+import { signUpSchema } from "@/lib/validation/auth";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,43 +10,13 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const { username, email, password, confirmPassword } = req.body;
-
-      if (!username || !email || !password || !password) {
-        throw new Error("empty_field");
-      }
-
-      let user = await prisma.user.findUnique({
-        where: { email },
-        select: {
-          id: true,
-          email: true,
-          password: true,
-        },
-      });
-
-      if (user) {
-        throw new Error("email_already_exists");
-      }
-
-      user = await prisma.user.findUnique({
-        where: { username },
-        select: {
-          id: true,
-          email: true,
-          password: true,
-        },
-      });
-
-      if (user) {
-        throw new Error("username_already_exists");
-      }
-
-      if (password !== confirmPassword) throw new Error("no_match");
+      const { username, email, password } = await signUpSchema.parseAsync(
+        req.body
+      );
 
       const hashedPassword = await hash(password);
 
-      user = await prisma.user.create({
+      const user = await prisma.user.create({
         data: {
           username,
           email,
@@ -63,7 +34,9 @@ export default async function handler(
         user,
       });
     } catch (err: any) {
-      return res.status(500).json({ statusCode: 500, message: err.message });
+      return res
+        .status(500)
+        .json({ statusCode: 500, message: "Something went wrong" });
     }
   } else {
     res

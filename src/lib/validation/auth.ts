@@ -22,17 +22,21 @@ export const signUpSchema = signInSchema
   })
   .refine(
     async ({ username }) => {
-      const res = await (await fetch(`/api/users/${username}`)).json();
+      const res = await (
+        await fetch(`http://localhost:3000/api/users?username=${username}`)
+      ).json();
 
-      return res.statusCode === 404;
+      return !res.found;
     },
     { message: "Username already exists", path: ["username"] }
   )
   .refine(
     async ({ email }) => {
-      const res = await (await fetch(`/api/users/${email}`)).json();
+      const res = await (
+        await fetch(`http://localhost:3000/api/users?email=${email}`)
+      ).json();
 
-      return res.statusCode === 404;
+      return !res.found;
     },
     { message: "Email already exists", path: ["email"] }
   );
