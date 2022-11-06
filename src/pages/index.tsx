@@ -36,7 +36,7 @@ export default function Home() {
       </Head>
 
       <main className="flex min-h-screen items-center justify-center">
-        <div className="w-full max-w-sm rounded-lg bg-zinc-50 p-6 shadow-md">
+        <div className="mx-4 w-full max-w-sm rounded-lg bg-zinc-50 p-6 shadow-md">
           <h1 className="mb-6 text-2xl font-bold capitalize">sign in</h1>
           <form
             className="mb-1 flex flex-col gap-y-4"
@@ -48,14 +48,19 @@ export default function Home() {
               type="email"
               placeholder="example@mail.com"
               register={register("email", { required: true })}
+              error={errors.email?.message}
             />
             <Input
               label="password"
               id="password"
               type="password"
-              register={register("password", { required: true })}
+              register={register("password", {
+                required: true,
+                minLength: 6,
+              })}
+              error={errors.password?.message}
             />
-            <button className="rounded bg-sky-400 p-2 font-bold capitalize text-zinc-50">
+            <button className="rounded bg-sky-400 p-2 font-bold capitalize text-zinc-50 transition-colors hover:bg-sky-300 focus-visible:bg-sky-300">
               sign in
             </button>
           </form>
@@ -65,7 +70,7 @@ export default function Home() {
             </span>
             <Link
               href="/sign-up"
-              className="text-sm text-sky-500 transition-colors hover:text-sky-300"
+              className="text-sm text-sky-500 transition-colors hover:text-sky-300 focus-visible:text-sky-300"
             >
               Sign up
             </Link>

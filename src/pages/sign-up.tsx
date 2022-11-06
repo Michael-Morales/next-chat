@@ -6,26 +6,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, ISignUp } from "../lib/validation/auth";
 
 import Input from "@/components/Input";
+import { useEffect } from "react";
 
-const ERRORS: {
-  [key: string]: {
-    name: "password" | "email" | "username" | "confirmPassword";
-    message: string;
-  };
-} = {
-  no_match: {
-    name: "password",
-    message: "Passwords don't match",
-  },
-  email_already_exists: {
-    name: "email",
-    message: "Email address already exists",
-  },
-  username_already_exists: {
-    name: "username",
-    message: "Username already exists",
-  },
-};
+// const ERRORS: {
+//   [key: string]: {
+//     name: "password" | "email" | "username" | "confirmPassword";
+//     message: string;
+//   };
+// } = {
+//   no_match: {
+//     name: "password",
+//     message: "Passwords don't match",
+//   },
+//   email_already_exists: {
+//     name: "email",
+//     message: "Email address already exists",
+//   },
+//   username_already_exists: {
+//     name: "username",
+//     message: "Username already exists",
+//   },
+// };
 
 export default function SignUp() {
   const router = useRouter();
@@ -40,21 +41,14 @@ export default function SignUp() {
 
   const onSubmit: SubmitHandler<ISignUp> = async (values) => {
     try {
-      if (values.password !== values.confirmPassword) {
-        setError("password", {
-          type: "no_match",
-          message: "Passwords don't match",
-        });
-
-        return;
-      }
+      const parsedValues = await signUpSchema.parseAsync(values);
 
       const res = await fetch("/api/auth/sign-up", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify(parsedValues),
       });
 
       const data = await res.json();
@@ -65,16 +59,20 @@ export default function SignUp() {
 
       router.push("/");
     } catch (err: any) {
-      setError(ERRORS[err.message].name, {
-        type: err.message,
-        message: ERRORS[err.message].message,
-      });
+      // setError(ERRORS[err.message].name, {
+      //   type: err.message,
+      //   message: ERRORS[err.message].message,
+      // });
     }
   };
 
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
+
   return (
     <main className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-sm rounded-lg bg-zinc-50 p-6 shadow-md">
+      <div className="mx-4 w-full max-w-sm rounded-lg bg-zinc-50 p-6 shadow-md">
         <h1 className="mb-6 text-2xl font-bold capitalize">sign up</h1>
         <form
           className="mb-1 flex flex-col gap-y-4"
@@ -85,6 +83,7 @@ export default function SignUp() {
             id="username"
             placeholder="JohnDoe"
             register={register("username", { required: true, minLength: 3 })}
+            error={errors.username?.message}
           />
           <Input
             label="email"
@@ -92,12 +91,14 @@ export default function SignUp() {
             type="email"
             placeholder="example@mail.com"
             register={register("email", { required: true })}
+            error={errors.email?.message}
           />
           <Input
             label="password"
             id="password"
             type="password"
             register={register("password", { required: true, minLength: 6 })}
+            error={errors.password?.message}
           />
           <Input
             label="confirm password"
@@ -107,6 +108,7 @@ export default function SignUp() {
               required: true,
               minLength: 6,
             })}
+            error={errors.confirmPassword?.message}
           />
           <button className="rounded bg-sky-400 p-2 font-bold capitalize text-zinc-50">
             sign up

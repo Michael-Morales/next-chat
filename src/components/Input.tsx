@@ -6,6 +6,7 @@ interface IProps {
   type?: string;
   placeholder?: string;
   register: UseFormRegisterReturn;
+  error?: string;
 }
 
 export default function Input({
@@ -14,14 +15,16 @@ export default function Input({
   type = "text",
   placeholder,
   register,
+  error,
 }: IProps) {
   return (
     <div className="flex flex-col gap-y-1">
       <label
-        className="text-sm font-semibold capitalize text-zinc-500"
+        className="flex items-center justify-between text-xs font-semibold text-zinc-500"
         htmlFor={id}
       >
-        {label}
+        <span className="capitalize">{label}</span>
+        <span className="text-red-500">{error}</span>
       </label>
       <input
         className="rounded border-zinc-500 bg-transparent placeholder:text-zinc-400"

@@ -3,17 +3,13 @@ import { hash } from "argon2";
 
 import prisma from "@/lib/prismadb";
 
-import { signUpSchema } from "@/lib/validation/auth";
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
     try {
-      const { username, email, password, confirmPassword } = signUpSchema.parse(
-        req.body
-      );
+      const { username, email, password, confirmPassword } = req.body;
 
       if (!username || !email || !password || !password) {
         throw new Error("empty_field");
