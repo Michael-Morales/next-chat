@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { hash } from "argon2";
 
-import prisma from "@/lib/prismadb";
-import { signUpSchema } from "@/lib/validation/auth";
+import prisma from "@lib/prismadb";
+import { signUpSchema } from "@lib/validation/auth";
 
 export default async function handler(
   req: NextApiRequest,

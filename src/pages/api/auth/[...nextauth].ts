@@ -1,11 +1,11 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verify } from "argon2";
 
-import prisma from "@/lib/prismadb";
-import { signInSchema } from "@/lib/validation/auth";
+import prisma from "@lib/prismadb";
+import { signInSchema } from "@lib/validation/auth";
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
@@ -75,4 +75,6 @@ export default NextAuth({
       return session;
     },
   },
-});
+};
+
+export default NextAuth(authOptions);

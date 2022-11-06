@@ -1,11 +1,14 @@
+import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
+import { unstable_getServerSession } from "next-auth";
 
-import { signInSchema, ISignIn } from "@/lib/validation/auth";
+import { signInSchema, ISignIn } from "@lib/validation/auth";
+import { authOptions } from "@api/auth/[...nextauth]";
 
-import Input from "@/components/Input";
+import Input from "@components/Input";
 
 export default function Home() {
   const {
@@ -70,4 +73,25 @@ export default function Home() {
       </div>
     </main>
   );
+}
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = await unstable_getServerSession(
+    ctx.req,
+    ctx.res,
+    authOptions
+  );
+
+  if (session) {
+    return {
+      redirect: {
+        destination: "/chat",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
 }

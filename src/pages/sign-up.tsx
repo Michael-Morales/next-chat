@@ -1,11 +1,14 @@
+import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { unstable_getServerSession } from "next-auth";
 
-import { signUpSchema, ISignUp } from "../lib/validation/auth";
+import { signUpSchema, ISignUp } from "@lib/validation/auth";
+import { authOptions } from "@api/auth/[...nextauth]";
 
-import Input from "@/components/Input";
+import Input from "@components/Input";
 
 export default function SignUp() {
   const router = useRouter();
@@ -91,4 +94,25 @@ export default function SignUp() {
       </div>
     </main>
   );
+}
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = await unstable_getServerSession(
+    ctx.req,
+    ctx.res,
+    authOptions
+  );
+
+  if (session) {
+    return {
+      redirect: {
+        destination: "/chat",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
 }
