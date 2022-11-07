@@ -25,7 +25,6 @@ export default function Chat() {
     reset,
     setFocus,
   } = useForm<IChatMessage>({
-    mode: "onChange",
     defaultValues: { message: "" },
     resolver: zodResolver(chatMessageSchema),
   });
@@ -54,8 +53,8 @@ export default function Chat() {
 
   return (
     <div className="flex h-[calc(100vh-72px)] flex-col justify-between">
-      <div className="h-full flex-1 overflow-y-auto bg-zinc-50 p-4">
-        <div className="flex flex-col justify-end gap-y-2">
+      <div className="h-full flex-1 flex-col-reverse overflow-y-auto bg-zinc-50 p-4">
+        <div className="flex flex-col gap-y-2">
           {messages.map(({ id, username, data }) => (
             <Message key={id} username={username} message={data} />
           ))}
