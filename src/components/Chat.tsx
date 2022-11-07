@@ -1,8 +1,9 @@
-import { useState, KeyboardEventHandler } from "react";
+import { useState, KeyboardEventHandler, useRef, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { configureAbly, useChannel } from "@ably-labs/react-hooks";
 
 import Button from "@components/Button";
+import Message from "@components/Message";
 
 interface IMessage {
   username: string;
@@ -13,6 +14,7 @@ interface IMessage {
 export default function Chat() {
   configureAbly({ authUrl: "/api/createTokenRequest" });
 
+  const emptyRef = useRef<HTMLDivElement>(null);
   const {
     register,
     handleSubmit,
@@ -35,21 +37,26 @@ export default function Chat() {
   };
 
   const handleKeyPress: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
-    if (e.code !== "Enter") {
+    if (e.code !== "Enter" || e.shiftKey) {
       return;
     }
 
     return handleSubmit(onSubmit({ message: e.currentTarget.value }));
   };
 
+  useEffect(() => {
+    emptyRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <div className="flex h-[calc(100vh-72px)] flex-col justify-between">
-      <div className="flex-1 overflow-y-auto border-b bg-zinc-50">
-        {messages.map(({ id, username, data }) => (
-          <div key={id}>
-            {username}: {data}
-          </div>
-        ))}
+      <div className="h-full flex-1 overflow-y-auto bg-zinc-50">
+        <div className="flex flex-col justify-end gap-y-2 border-b p-4">
+          {messages.map(({ id, username, data }) => (
+            <Message key={id} username={username} message={data} />
+          ))}
+          <div ref={emptyRef} />
+        </div>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="flex">
         <textarea
