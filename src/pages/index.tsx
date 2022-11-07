@@ -9,6 +9,7 @@ import { signInSchema, ISignIn } from "@lib/validation/auth";
 import { authOptions } from "@api/auth/[...nextauth]";
 
 import Input from "@components/Input";
+import Button from "@components/Button";
 
 export default function Home() {
   const {
@@ -55,9 +56,7 @@ export default function Home() {
             })}
             error={errors.password?.message}
           />
-          <button className="rounded bg-sky-400 p-2 font-bold capitalize text-zinc-50 transition-colors hover:bg-sky-300 focus-visible:bg-sky-300">
-            sign in
-          </button>
+          <Button type="submit">sign in</Button>
         </form>
         <p>
           <span className="mr-1 text-sm text-zinc-500">
