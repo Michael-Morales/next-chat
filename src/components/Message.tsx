@@ -10,7 +10,7 @@ export default function Message({ username, message }: IProps) {
 
   return (
     <div
-      className={`flex max-w-[70%] flex-col gap-y-2 rounded-tl-xl rounded-tr-xl p-4 ${
+      className={`flex max-w-[70%] flex-col gap-y-0.5 rounded-tl-xl rounded-tr-xl p-4 ${
         session?.user.username === username
           ? "self-end rounded-bl-xl bg-sky-200"
           : "self-start rounded-br-xl bg-sky-100"

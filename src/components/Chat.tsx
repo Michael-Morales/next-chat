@@ -1,7 +1,7 @@
 import { useState, KeyboardEventHandler, useRef, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { configureAbly, useChannel } from "@ably-labs/react-hooks";
+import { useChannel } from "@ably-labs/react-hooks";
 
 import { chatMessageSchema, IChatMessage } from "@lib/validation/chat";
 
@@ -15,8 +15,6 @@ interface IMessage {
 }
 
 export default function Chat() {
-  configureAbly({ authUrl: "/api/createTokenRequest" });
-
   const emptyRef = useRef<HTMLDivElement>(null);
   const {
     register,
@@ -53,17 +51,15 @@ export default function Chat() {
 
   return (
     <div className="flex h-[calc(100vh-72px)] flex-col justify-between">
-      <div className="h-full flex-1 flex-col-reverse overflow-y-auto bg-zinc-50 p-4">
-        <div className="flex flex-col gap-y-2">
-          {messages.map(({ id, username, data }) => (
-            <Message key={id} username={username} message={data} />
-          ))}
-          <div ref={emptyRef} />
-        </div>
+      <div className="flex h-full flex-col gap-y-2 overflow-y-auto bg-zinc-50 p-4">
+        {messages.map(({ id, username, data }) => (
+          <Message key={id} username={username} message={data} />
+        ))}
+        <div ref={emptyRef} />
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="flex border-t">
         <textarea
-          className="h-16 flex-1 resize-none border-none"
+          className="h-16 flex-1 resize-none border-none focus:ring-0"
           placeholder="Type a message..."
           onKeyUp={handleKeyPress}
           {...register("message")}

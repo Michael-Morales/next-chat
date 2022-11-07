@@ -77,7 +77,9 @@ export default function SignUp() {
             })}
             error={errors.confirmPassword?.message}
           />
-          <Button type="submit">sign up</Button>
+          <Button type="submit" rounded>
+            sign up
+          </Button>
         </form>
         <p>
           <span className="mr-1 text-sm text-zinc-500">

@@ -56,7 +56,9 @@ export default function Home() {
             })}
             error={errors.password?.message}
           />
-          <Button type="submit">sign in</Button>
+          <Button type="submit" rounded>
+            sign in
+          </Button>
         </form>
         <p>
           <span className="mr-1 text-sm text-zinc-500">

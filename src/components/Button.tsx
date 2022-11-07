@@ -4,6 +4,7 @@ interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: string;
   action?: () => void;
   danger?: boolean;
+  rounded?: boolean;
 }
 
 export default function Button({
@@ -12,10 +13,11 @@ export default function Button({
   action,
   danger,
   disabled,
+  rounded,
 }: IProps) {
   return (
     <button
-      className={`rounded ${
+      className={`${rounded ? "rounded" : ""} ${
         danger
           ? "bg-red-500 hover:bg-red-300 focus-visible:bg-red-300 disabled:bg-red-300"
           : "bg-sky-500 hover:bg-sky-300 focus-visible:bg-sky-300 disabled:bg-sky-300"
