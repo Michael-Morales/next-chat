@@ -24,7 +24,7 @@ export default function Home() {
     const { email, password } = signInSchema.parse(values);
 
     signIn("app-login", {
-      callbackUrl: "/chat",
+      callbackUrl: "/chatroom",
       email,
       password,
     });
@@ -84,7 +84,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   if (session) {
     return {
       redirect: {
-        destination: "/chat",
+        destination: "/chatroom",
         permanent: false,
       },
     };

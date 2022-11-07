@@ -105,7 +105,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   if (session) {
     return {
       redirect: {
-        destination: "/chat",
+        destination: "/chatroom",
         permanent: false,
       },
     };
