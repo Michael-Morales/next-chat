@@ -1,7 +1,6 @@
-import { useState, KeyboardEventHandler, useRef, useEffect } from "react";
+import { KeyboardEventHandler, useRef, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useChannel } from "@ably-labs/react-hooks";
 
 import { chatMessageSchema, IChatMessage } from "@lib/validation/chat";
 
@@ -14,7 +13,12 @@ interface IMessage {
   id: string;
 }
 
-export default function Chat() {
+interface IProps {
+  messages: IMessage[];
+  handlePublish: (message: string) => void;
+}
+
+export default function Chat({ messages, handlePublish }: IProps) {
   const emptyRef = useRef<HTMLDivElement>(null);
   const {
     register,
@@ -26,13 +30,9 @@ export default function Chat() {
     defaultValues: { message: "" },
     resolver: zodResolver(chatMessageSchema),
   });
-  const [messages, setMessages] = useState<IMessage[]>([]);
-  const [channel] = useChannel("main-room", ({ clientId, data, id }) => {
-    setMessages((prev) => [...prev, { username: clientId, data, id }]);
-  });
 
   const onSubmit: SubmitHandler<IChatMessage> = ({ message }) => {
-    channel.publish({ name: "chat-message", data: message });
+    handlePublish(message);
     setFocus("message");
     reset();
   };

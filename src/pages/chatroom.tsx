@@ -1,15 +1,34 @@
+import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { signOut } from "next-auth/react";
-import { configureAbly, useChannel } from "@ably-labs/react-hooks";
+import { useChannel, configureAbly } from "@ably-labs/react-hooks";
 
 import Button from "@components/Button";
 
 const ChatComponent = dynamic(() => import("@components/Chat"), { ssr: false });
 
-configureAbly({ authUrl: "/api/createTokenRequest" });
+configureAbly({
+  authUrl: "http://localhost:3000/api/createTokenRequest",
+});
+
+interface IMessage {
+  username: string;
+  data: string;
+  id: string;
+}
 
 export default function ChatRoom() {
-  const [, ably] = useChannel("main-room", () => {});
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [channel, ably] = useChannel("main-room", ({ clientId, data, id }) => {
+    setMessages((prev) => [...prev, { username: clientId, data, id }]);
+  });
+
+  const handlePublish = useCallback(
+    (message: string) => {
+      channel.publish({ name: "chat-message", data: message });
+    },
+    [channel]
+  );
 
   const handleSignOut = () => {
     signOut();
@@ -25,7 +44,7 @@ export default function ChatRoom() {
             sign out
           </Button>
         </nav>
-        <ChatComponent />
+        <ChatComponent messages={messages} handlePublish={handlePublish} />
       </div>
     </main>
   );
