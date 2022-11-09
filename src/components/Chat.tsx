@@ -9,7 +9,9 @@ import { chatMessageSchema, IChatMessage } from "@lib/validation/chat";
 import Button from "@components/Button";
 import Message from "@components/Message";
 
-configureAbly({ authUrl: "http://localhost:3000/api/createTokenRequest" });
+configureAbly({
+  authUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/createTokenRequest`,
+});
 
 interface IMessage {
   username: string;

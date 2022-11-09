@@ -1,13 +1,5 @@
 import { z } from "zod";
 
-let baseUrl: string;
-
-if (process.env.NODE_ENV === "development") {
-  baseUrl = "http://localhost:3000";
-} else if (process.env.NODE_ENV === "production") {
-  baseUrl = "https://";
-}
-
 export const signInSchema = z.object({
   email: z.string().min(1, { message: "Required" }).email(),
   password: z
@@ -31,7 +23,9 @@ export const signUpSchema = signInSchema
   .refine(
     async ({ username }) => {
       const res = await (
-        await fetch(`${baseUrl}/api/users?username=${username}`)
+        await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/users?username=${username}`
+        )
       ).json();
 
       return !res.found;
@@ -41,7 +35,9 @@ export const signUpSchema = signInSchema
   .refine(
     async ({ email }) => {
       const res = await (
-        await fetch(`${baseUrl}/api/users?email=${email}`)
+        await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/users?email=${email}`
+        )
       ).json();
 
       return !res.found;
