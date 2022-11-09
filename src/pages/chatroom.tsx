@@ -1,5 +1,9 @@
+import { GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
 import { signOut } from "next-auth/react";
+import { unstable_getServerSession } from "next-auth";
+
+import { authOptions } from "@api/auth/[...nextauth]";
 
 import Button from "@components/Button";
 
@@ -23,4 +27,25 @@ export default function ChatRoom() {
       </div>
     </main>
   );
+}
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = await unstable_getServerSession(
+    ctx.req,
+    ctx.res,
+    authOptions
+  );
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
 }
