@@ -1,11 +1,14 @@
-import { KeyboardEventHandler, useRef, useEffect } from "react";
+import { KeyboardEventHandler, useState, useRef, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { configureAbly, useChannel } from "@ably-labs/react-hooks";
 
 import { chatMessageSchema, IChatMessage } from "@lib/validation/chat";
 
 import Button from "@components/Button";
 import Message from "@components/Message";
+
+configureAbly({ authUrl: "http://localhost:3000/api/createTokenRequest" });
 
 interface IMessage {
   username: string;
@@ -13,12 +16,11 @@ interface IMessage {
   id: string;
 }
 
-interface IProps {
-  messages: IMessage[];
-  handlePublish: (message: string) => void;
-}
-
-export default function Chat({ messages, handlePublish }: IProps) {
+export default function Chat() {
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [channel] = useChannel("main-room", ({ clientId, data, id }) => {
+    setMessages((prev) => [...prev, { username: clientId, data, id }]);
+  });
   const emptyRef = useRef<HTMLDivElement>(null);
   const {
     register,
@@ -32,7 +34,7 @@ export default function Chat({ messages, handlePublish }: IProps) {
   });
 
   const onSubmit: SubmitHandler<IChatMessage> = ({ message }) => {
-    handlePublish(message);
+    channel.publish({ name: "chat-message", data: message });
     setFocus("message");
     reset();
   };
