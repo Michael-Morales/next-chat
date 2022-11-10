@@ -1,20 +1,15 @@
 import { GetServerSidePropsContext } from "next";
-import dynamic from "next/dynamic";
 import { unstable_getServerSession } from "next-auth";
 
 import { authOptions } from "@api/auth/[...nextauth]";
 
 import Layout from "@components/Layout";
 
-const ChatComponent = dynamic(() => import("@components/Chat"), { ssr: false });
-
-export default function ChatRoom() {
+export default function Settings() {
   return (
-    <main className="mx-4 h-screen">
-      <Layout>
-        <ChatComponent />
-      </Layout>
-    </main>
+    <Layout>
+      <form>test</form>
+    </Layout>
   );
 }
 
