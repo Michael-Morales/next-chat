@@ -21,10 +21,20 @@ export default function Settings() {
     resolver: zodResolver(userSchema),
   });
 
-  const onSubmit: SubmitHandler<IUser> = (values) => {
-    const { username } = userSchema.parse(values);
+  const onSubmit: SubmitHandler<IUser> = async (values) => {
+    const parsedValues = userSchema.parse(values);
 
-    console.log(username);
+    const res = await fetch(`/api/users/${session?.user.userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(parsedValues),
+    });
+
+    const data = await res.json();
+
+    console.log(data);
   };
 
   return (
